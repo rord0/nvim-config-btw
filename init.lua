@@ -40,6 +40,18 @@ vim.keymap.set("n", "<leader>r", function()
   })
 end, { desc = "Run raddebugger in terminal" })
 
+vim.filetype.add({
+    extension = {
+        hlsl = "hlsl",
+    }
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "hlsl",
+    callback = function()
+        vim.treesitter.start()
+    end
+})
 
 -- Map tab to accept first blink.cmp snippet
 vim.keymap.set("i", "<Tab>", function()
