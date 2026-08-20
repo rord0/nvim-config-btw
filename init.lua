@@ -31,12 +31,22 @@ vim.keymap.set("n", "<leader>t", function()
     require("neo-tree.command").execute({ toggle = true })
 end, { desc = "Toggle Neo-tree" })
 
-vim.keymap.set("n", "<leader>b", ":!build.bat<cr>", { desc = "run build.bat" })
+vim.keymap.set("n", "<leader>b", ":!.\\build.bat<cr>", { desc = "run build.bat" })
 
 vim.keymap.set("n", "<leader>r", function()
+  local build_dir = vim.fn.getcwd() .. "/build"
+  local exes = vim.fn.glob(build_dir .. "/*.exe", false, true)
+
+  if #exes == 0 then
+    vim.notify("No .exe found in " .. build_dir, vim.log.levels.ERROR)
+    return
+  end
+
+  local exe_name = vim.fn.fnamemodify(exes[1], ":t")
+
   vim.fn.system({
     "cmd.exe", "/c", "cd", "/d", "build", "&&", "start", "",
-    "raddbg", "./tanks.exe", "--auto_run", "-q"
+    "raddbg", "./" .. exe_name, "--auto_run"
   })
 end, { desc = "Run raddebugger in terminal" })
 
